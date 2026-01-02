@@ -19,7 +19,7 @@ const EXERCISE_TYPES: { type: ExerciseType; name: string; icon: string }[] = [
 ];
 
 export default function Exercise() {
-    const { grade, topicId, lessonId } = useParams();
+    const { grade, lessonId } = useParams();
     const navigate = useNavigate();
     const { student } = useAuth();
 
