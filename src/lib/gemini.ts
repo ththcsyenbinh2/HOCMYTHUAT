@@ -24,7 +24,6 @@ const genAI = new GoogleGenerativeAI(apiKey || 'placeholder-key');
 export async function generateMixedExam(
     grade: number,
     topicTitle: string,
-    lessonId: number,
     lessonTitle: string
 ): Promise<MixedExam> {
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
@@ -123,7 +122,6 @@ QUAN TRỌNG: Chỉ trả về JSON thuần túy, không thêm markdown, text gi
         };
 
         return {
-            lessonId,
             lessonTitle,
             topicTitle,
             grade,
@@ -134,7 +132,7 @@ QUAN TRỌNG: Chỉ trả về JSON thuần túy, không thêm markdown, text gi
     } catch (error) {
         console.error('Error generating mixed exam:', error);
         // Return fallback exam
-        return generateFallbackMixedExam(grade, topicTitle, lessonId, lessonTitle);
+        return generateFallbackMixedExam(grade, topicTitle, lessonTitle);
     }
 }
 
@@ -156,7 +154,7 @@ export function calculateScore(
     const percentage = (score / totalScore) * 100;
 
     return {
-        examId: `${exam.grade}-${exam.lessonId}`,
+        examId: `${exam.grade}-${exam.lessonTitle}`,
         studentId: '', // to be filled by caller
         answers,
         score,
@@ -192,7 +190,6 @@ function checkAnswer(question: Question, userAnswer: any): boolean {
 function generateFallbackMixedExam(
     grade: number,
     topicTitle: string,
-    lessonId: number,
     lessonTitle: string
 ): MixedExam {
     const questions: Question[] = [
@@ -200,7 +197,7 @@ function generateFallbackMixedExam(
             id: 'q1',
             type: 'multiple-choice',
             cognitiveLevel: 'nhận_biết',
-            question: `Bài "${lessonTitle}" thuộc chủ đề nào?`,
+            question: `Bài học "${lessonTitle}" thuộc chủ đề nào?`,
             options: [topicTitle, 'Chủ đề khác', 'Không thuộc chủ đề nào', 'Tất cả các đáp án'],
             correctAnswer: 0
         },
@@ -212,8 +209,8 @@ function generateFallbackMixedExam(
             options: [
                 'Nghệ thuật tạo hình',
                 'Nghệ thuật âm nhạc',
-                'Nghệ thuật văn học',
-                'Nghệ thuật thể dục'
+                'Nghệ thuật sân khấu',
+                'Nghệ thuật điện ảnh'
             ],
             correctAnswer: 0
         },
@@ -221,29 +218,25 @@ function generateFallbackMixedExam(
             id: 'q3',
             type: 'drag-drop',
             cognitiveLevel: 'thông_hiểu',
-            instruction: 'Kéo các yếu tố mỹ thuật vào đúng nhóm',
-            items: ['Màu sắc', 'Đường nét', 'Hình khối', 'Bố cục'],
-            dropZones: ['Yếu tố màu', 'Yếu tố tạo hình', 'Yếu tố hình khối', 'Yếu tố cấu trúc'],
-            correctMapping: { '0': 0, '1': 1, '2': 2, '3': 3 }
+            instruction: 'Ghép các yếu tố mỹ thuật với đặc điểm tương ứng',
+            items: ['Đường nét', 'Màu sắc', 'Hình khối', 'Kết cấu'],
+            dropZones: ['Tạo hình dáng', 'Tạo cảm xúc', 'Tạo chiều sâu', 'Tạo bề mặt'],
+            correctMapping: { 0: 0, 1: 1, 2: 2, 3: 3 }
         },
         {
             id: 'q4',
             type: 'matching',
             cognitiveLevel: 'thông_hiểu',
-            instruction: 'Ghép các khái niệm với định nghĩa phù hợp',
-            leftItems: ['Hội họa', 'Điêu khắc', 'Kiến trúc'],
-            rightItems: [
-                'Nghệ thuật tạo hình trên mặt phẳng',
-                'Nghệ thuật tạo hình khối 3D',
-                'Nghệ thuật xây dựng công trình'
-            ],
-            correctPairs: { '0': 0, '1': 1, '2': 2 }
+            instruction: 'Ghép các loại hình mỹ thuật với ví dụ',
+            leftItems: ['Hội họa', 'Điêu khắc', 'Kiến trúc', 'Thủ công'],
+            rightItems: ['Tranh vẽ', 'Tượng đài', 'Nhà cửa', 'Đồ gốm'],
+            correctPairs: { 0: 0, 1: 1, 2: 2, 3: 3 }
         },
         {
             id: 'q5',
             type: 'ordering',
             cognitiveLevel: 'vận_dụng',
-            instruction: 'Sắp xếp các bước vẽ tranh theo đúng thứ tự',
+            instruction: 'Sắp xếp các bước vẽ tranh theo thứ tự đúng',
             items: [
                 'Tô màu và hoàn thiện',
                 'Phác thảo ý tưởng',
@@ -255,7 +248,6 @@ function generateFallbackMixedExam(
     ];
 
     return {
-        lessonId,
         lessonTitle,
         topicTitle,
         grade,
@@ -533,4 +525,158 @@ function generateFallbackExercise(
                 }
             };
     }
+}
+
+// Generate interactive simulation game
+export async function generateInteractiveSimulation(
+    grade: number,
+    topicTitle: string,
+    lessonTitle: string
+): Promise<any> {
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+    const prompt = `Bạn là chuyên gia thiết kế game giáo dục mỹ thuật. Tạo một trò chơi/mô phỏng tương tác cho bài học "${lessonTitle}" lớp ${grade} (SGK Mỹ thuật - Kết nối tri thức).
+
+Yêu cầu:
+- Tạo game tương tác phù hợp với nội dung bài học
+- Game phải có tính giáo dục cao, giúp học sinh hiểu sâu về bài học
+- Có các hoạt động tương tác cụ thể (vẽ, tô màu, sắp xếp, ghép hình, v.v.)
+- Có hướng dẫn rõ ràng và phản hồi tức thì
+
+Trả về JSON với cấu trúc:
+{
+  "gameType": "drawing" | "coloring" | "puzzle" | "matching" | "quiz",
+  "title": "Tên game",
+  "description": "Mô tả game",
+  "learningObjectives": ["Mục tiêu 1", "Mục tiêu 2", "Mục tiêu 3"],
+  "instructions": ["Bước 1", "Bước 2", "Bước 3"],
+  "gameData": {
+    // Dữ liệu cụ thể cho từng loại game
+    // Ví dụ với drawing game:
+    "canvas": {
+      "width": 800,
+      "height": 600,
+      "backgroundColor": "#ffffff"
+    },
+    "tools": [
+      {"name": "Bút chì", "type": "pencil", "color": "#000000", "size": 2},
+      {"name": "Cọ vẽ", "type": "brush", "color": "#000000", "size": 5},
+      {"name": "Tẩy", "type": "eraser", "size": 10}
+    ],
+    "colorPalette": ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#000000", "#FFFFFF"],
+    "referenceImage": {
+      "description": "Mô tả hình mẫu",
+      "hints": ["Gợi ý 1", "Gợi ý 2"]
+    },
+    "challenges": [
+      {
+        "title": "Thử thách 1",
+        "description": "Mô tả thử thách",
+        "criteria": ["Tiêu chí 1", "Tiêu chí 2"]
+      }
+    ]
+  },
+  "feedback": {
+    "onProgress": ["Phản hồi khi đang làm"],
+    "onComplete": ["Phản hồi khi hoàn thành"]
+  }
+}
+
+Hãy sáng tạo game phù hợp với nội dung bài học cụ thể.`;
+
+    try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        // Extract JSON from response
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            const gameData = JSON.parse(jsonMatch[0]);
+            return gameData;
+        }
+
+        // Fallback game
+        return createFallbackSimulation(lessonTitle);
+    } catch (error) {
+        console.error('Error generating simulation:', error);
+        return createFallbackSimulation(lessonTitle);
+    }
+}
+
+function createFallbackSimulation(lessonTitle: string): any {
+    return {
+        gameType: 'drawing',
+        title: `Thực hành vẽ: ${lessonTitle}`,
+        description: 'Thực hành kỹ năng vẽ và sáng tạo nghệ thuật',
+        learningObjectives: [
+            'Rèn luyện kỹ năng vẽ cơ bản',
+            'Phát triển khả năng quan sát và sáng tạo',
+            'Hiểu và áp dụng các nguyên tắc mỹ thuật'
+        ],
+        instructions: [
+            'Chọn công cụ vẽ từ thanh công cụ',
+            'Chọn màu sắc từ bảng màu',
+            'Vẽ trên canvas theo chủ đề bài học',
+            'Sử dụng các gợi ý để hoàn thiện tác phẩm'
+        ],
+        gameData: {
+            canvas: {
+                width: 800,
+                height: 600,
+                backgroundColor: '#ffffff'
+            },
+            tools: [
+                { name: 'Bút chì', type: 'pencil', color: '#000000', size: 2 },
+                { name: 'Cọ vẽ nhỏ', type: 'brush', color: '#000000', size: 5 },
+                { name: 'Cọ vẽ lớn', type: 'brush', color: '#000000', size: 10 },
+                { name: 'Tẩy', type: 'eraser', size: 15 }
+            ],
+            colorPalette: [
+                '#FF0000', '#FF7F00', '#FFFF00', '#00FF00',
+                '#0000FF', '#4B0082', '#9400D3', '#FF1493',
+                '#000000', '#808080', '#FFFFFF', '#8B4513'
+            ],
+            referenceImage: {
+                description: `Tham khảo các tác phẩm mỹ thuật liên quan đến ${lessonTitle}`,
+                hints: [
+                    'Chú ý đến cấu đồ và bố cục',
+                    'Sử dụng màu sắc hài hòa',
+                    'Thể hiện cảm xúc và ý tưởng cá nhân'
+                ]
+            },
+            challenges: [
+                {
+                    title: 'Thử thách cơ bản',
+                    description: 'Vẽ một tác phẩm đơn giản theo chủ đề',
+                    criteria: [
+                        'Có bố cục rõ ràng',
+                        'Sử dụng ít nhất 3 màu sắc',
+                        'Thể hiện được chủ đề bài học'
+                    ]
+                },
+                {
+                    title: 'Thử thách nâng cao',
+                    description: 'Tạo tác phẩm sáng tạo với kỹ thuật phức tạp',
+                    criteria: [
+                        'Bố cục phức tạp và cân đối',
+                        'Sử dụng nhiều màu sắc hài hòa',
+                        'Thể hiện sự sáng tạo độc đáo'
+                    ]
+                }
+            ]
+        },
+        feedback: {
+            onProgress: [
+                'Bạn đang làm rất tốt!',
+                'Hãy tiếp tục sáng tạo!',
+                'Thử nghiệm với nhiều màu sắc hơn!'
+            ],
+            onComplete: [
+                'Tuyệt vời! Bạn đã hoàn thành tác phẩm!',
+                'Tác phẩm của bạn rất ấn tượng!',
+                'Hãy chia sẻ tác phẩm với bạn bè!'
+            ]
+        }
+    };
 }

@@ -107,7 +107,6 @@ export type Question =
 
 // Mixed exam structure
 export interface MixedExam {
-    lessonId: number;
     lessonTitle: string;
     topicTitle: string;
     grade: number;
