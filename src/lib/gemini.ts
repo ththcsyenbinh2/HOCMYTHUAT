@@ -15,10 +15,20 @@ import {
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
 if (!apiKey) {
-    console.warn('Gemini API key not found. Please set VITE_GEMINI_API_KEY environment variable.');
+    console.error('⚠️ GEMINI API KEY NOT FOUND! Please set VITE_GEMINI_API_KEY environment variable.');
 }
 
 const genAI = new GoogleGenerativeAI(apiKey || 'placeholder-key');
+
+// Helper function to add timeout to promises
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+    return Promise.race([
+        promise,
+        new Promise<T>((_, reject) =>
+            setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
+        )
+    ]);
+}
 
 // Generate mixed exam with all question types
 export async function generateMixedExam(
@@ -26,6 +36,14 @@ export async function generateMixedExam(
     topicTitle: string,
     lessonTitle: string
 ): Promise<MixedExam> {
+    console.log('🎯 Starting generateMixedExam for:', lessonTitle);
+
+    // Check API key first
+    if (!apiKey || apiKey === 'placeholder-key') {
+        console.error('❌ Invalid API key, using fallback exam');
+        return generateFallbackMixedExam(grade, topicTitle, lessonTitle);
+    }
+
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
     const prompt = `Bạn là chuyên gia giáo dục môn Mĩ thuật. Tạo đúng 15 đến 20 câu hỏi cho bài học "${lessonTitle}" lớp ${grade} ("Sách giáo khoa Mĩ thuật – Kết nối tri thức với cuộc sống").
@@ -101,18 +119,24 @@ Cấu trúc JSON trả về:
 QUAN TRỌNG: Chỉ trả về JSON thuần túy, không thêm markdown, text giải thích hay bất kỳ nội dung nào khác.`;
 
     try {
-        const result = await model.generateContent(prompt);
+        console.log('📡 Calling Gemini API...');
+        const result = await withTimeout(model.generateContent(prompt), 30000); // 30 second timeout
+        console.log('✅ API response received');
+
         const response = await result.response;
         const text = response.text();
+        console.log('📝 Response text length:', text.length);
 
         // Extract JSON from response
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (!jsonMatch) {
+            console.error('❌ No JSON found in response');
             throw new Error('No JSON found in response');
         }
 
         const data = JSON.parse(jsonMatch[0]);
         const questions = data.questions as Question[];
+        console.log('✅ Successfully parsed', questions.length, 'questions');
 
         // Calculate distribution
         const distribution = {
@@ -130,7 +154,8 @@ QUAN TRỌNG: Chỉ trả về JSON thuần túy, không thêm markdown, text gi
             distribution
         };
     } catch (error) {
-        console.error('Error generating mixed exam:', error);
+        console.error('❌ Error generating mixed exam:', error);
+        console.log('🔄 Using fallback exam instead');
         // Return fallback exam
         return generateFallbackMixedExam(grade, topicTitle, lessonTitle);
     }
@@ -532,6 +557,14 @@ export async function generateInteractiveSimulation(
     grade: number,
     lessonTitle: string
 ): Promise<any> {
+    console.log('🎮 Starting generateInteractiveSimulation for:', lessonTitle);
+
+    // Check API key first
+    if (!apiKey || apiKey === 'placeholder-key') {
+        console.error('❌ Invalid API key, using fallback simulation');
+        return createFallbackSimulation(lessonTitle);
+    }
+
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
     const prompt = `Bạn là chuyên gia thiết kế game giáo dục mỹ thuật. Tạo một trò chơi/mô phỏng tương tác cho bài học "${lessonTitle}" lớp ${grade} (SGK Mỹ thuật - Kết nối tri thức).
@@ -584,21 +617,27 @@ Trả về JSON với cấu trúc:
 Hãy sáng tạo game phù hợp với nội dung bài học cụ thể.`;
 
     try {
-        const result = await model.generateContent(prompt);
+        console.log('📡 Calling Gemini API for simulation...');
+        const result = await withTimeout(model.generateContent(prompt), 30000);
+        console.log('✅ Simulation API response received');
+
         const response = await result.response;
         const text = response.text();
+        console.log('📝 Simulation response length:', text.length);
 
         // Extract JSON from response
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
             const gameData = JSON.parse(jsonMatch[0]);
+            console.log('✅ Successfully parsed simulation game');
             return gameData;
         }
 
-        // Fallback game
+        console.warn('⚠️ No JSON in simulation response, using fallback');
         return createFallbackSimulation(lessonTitle);
     } catch (error) {
-        console.error('Error generating simulation:', error);
+        console.error('❌ Error generating simulation:', error);
+        console.log('🔄 Using fallback simulation');
         return createFallbackSimulation(lessonTitle);
     }
 }
