@@ -1,0 +1,75 @@
+.lesson-page {
+    min-height: 100vh;
+    background: var(--color-bg-primary);
+}
+
+.lesson-header {
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-2xl) 0;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.lesson-header h1 {
+    margin: var(--spacing-lg) 0 var(--spacing-sm);
+    font-size: var(--font-size-3xl);
+}
+
+.lesson-main {
+    padding-bottom: var(--spacing-3xl);
+}
+
+.lesson-main h2 {
+    margin-bottom: var(--spacing-xl);
+    font-size: var(--font-size-2xl);
+}
+
+.lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.lesson-card {
+    text-align: center;
+    animation: scaleIn var(--transition-slow) ease-out;
+}
+
+.lesson-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-xl);
+    background: var(--gradient-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg);
+}
+
+.lesson-card h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.lesson-card p {
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.lesson-action {
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lesson-action span {
+    color: var(--color-primary-light);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+}
+
+@media (max-width: 768px) {
+    .lessons-grid {
+        grid-template-columns: 1fr;
+    }
+}
