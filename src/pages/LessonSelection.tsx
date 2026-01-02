@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTopicById } from '@/data/curriculum';
+import { LessonType } from '@/types';
 import { Button } from '@/components/UI/Button';
 import { Card } from '@/components/UI/Card';
 import './LessonSelection.css';
@@ -35,7 +36,7 @@ export default function LessonSelection() {
             <main className="lesson-main container">
                 <h2>Chọn loại bài học</h2>
                 <div className="lessons-grid">
-                    {topic.lessonTypes.map((lessonType, index) => (
+                    {topic.lessonTypes.map((lessonType: LessonType, index: number) => (
                         <Card
                             key={lessonType.id}
                             hoverable

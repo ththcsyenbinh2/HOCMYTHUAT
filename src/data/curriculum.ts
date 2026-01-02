@@ -1,4 +1,4 @@
-import { GradeCurriculum } from '@/types';
+import { GradeCurriculum, Topic, LessonType } from '@/types';
 
 // Complete curriculum data based on "Kết nối tri thức với cuộc sống" textbook
 export const curriculum: GradeCurriculum[] = [
