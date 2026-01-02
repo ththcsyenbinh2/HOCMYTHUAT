@@ -30,7 +30,6 @@ export default function VisualSimulation() {
             try {
                 const game = await generateInteractiveSimulation(
                     gradeNum,
-                    lessonData.topic.title,
                     lessonData.lesson.title
                 );
                 setGameData(game);

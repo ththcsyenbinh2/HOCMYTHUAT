@@ -530,7 +530,6 @@ function generateFallbackExercise(
 // Generate interactive simulation game
 export async function generateInteractiveSimulation(
     grade: number,
-    topicTitle: string,
     lessonTitle: string
 ): Promise<any> {
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
