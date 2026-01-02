@@ -20,6 +20,10 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey || 'placeholder-key');
 
+// Request queue to prevent concurrent requests
+let isRequestInProgress = false;
+const requestQueue: Array<() => Promise<void>> = [];
+
 // Helper function to add timeout to promises
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
     return Promise.race([
@@ -28,6 +32,67 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
             setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
         )
     ]);
+}
+
+// Helper function to add delay
+function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Helper function to retry with exponential backoff
+async function retryWithBackoff<T>(
+    fn: () => Promise<T>,
+    maxRetries: number = 3,
+    initialDelay: number = 1000
+): Promise<T> {
+    let lastError: any;
+
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            // Add delay before retry (except for first attempt)
+            if (i > 0) {
+                const delayMs = initialDelay * Math.pow(2, i - 1);
+                console.log(`⏳ Waiting ${delayMs}ms before retry ${i}/${maxRetries}...`);
+                await delay(delayMs);
+            }
+
+            return await fn();
+        } catch (error: any) {
+            lastError = error;
+            console.error(`❌ Attempt ${i + 1}/${maxRetries} failed:`, error.message);
+
+            // Don't retry if it's a timeout or insufficient resources error
+            if (error.message?.includes('timeout') ||
+                error.message?.includes('INSUFFICIENT_RESOURCES') ||
+                error.message?.includes('Failed to fetch')) {
+                console.log('🔄 Retrying due to resource/network error...');
+                continue;
+            }
+
+            // For other errors, throw immediately
+            throw error;
+        }
+    }
+
+    throw lastError;
+}
+
+// Queue manager to prevent concurrent requests
+async function queueRequest<T>(fn: () => Promise<T>): Promise<T> {
+    // If a request is in progress, wait for it to complete
+    while (isRequestInProgress) {
+        console.log('⏳ Waiting for previous request to complete...');
+        await delay(500);
+    }
+
+    isRequestInProgress = true;
+
+    try {
+        const result = await fn();
+        return result;
+    } finally {
+        isRequestInProgress = false;
+    }
 }
 
 // Generate mixed exam with all question types
@@ -44,9 +109,17 @@ export async function generateMixedExam(
         return generateFallbackMixedExam(grade, topicTitle, lessonTitle);
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+    return queueRequest(async () => {
+        return retryWithBackoff(async () => {
+            const model = genAI.getGenerativeModel({
+                model: 'gemini-1.5-flash-latest',
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 8192,
+                }
+            });
 
-    const prompt = `Bạn là chuyên gia giáo dục môn Mĩ thuật. Tạo đúng 15 đến 20 câu hỏi cho bài học "${lessonTitle}" lớp ${grade} ("Sách giáo khoa Mĩ thuật – Kết nối tri thức với cuộc sống").
+            const prompt = `Bạn là chuyên gia giáo dục môn Mĩ thuật. Tạo đúng 15 đến 20 câu hỏi cho bài học "${lessonTitle}" lớp ${grade} ("Sách giáo khoa Mĩ thuật – Kết nối tri thức với cuộc sống").
 
 Yêu cầu bắt buộc:
 - Nội dung chính xác 100% theo SGK, không bịa đặt
@@ -118,47 +191,46 @@ Cấu trúc JSON trả về:
 
 QUAN TRỌNG: Chỉ trả về JSON thuần túy, không thêm markdown, text giải thích hay bất kỳ nội dung nào khác.`;
 
-    try {
-        console.log('📡 Calling Gemini API...');
-        const result = await withTimeout(model.generateContent(prompt), 30000); // 30 second timeout
-        console.log('✅ API response received');
+            console.log('📡 Calling Gemini API...');
+            const result = await withTimeout(model.generateContent(prompt), 45000); // 45 second timeout
+            console.log('✅ API response received');
 
-        const response = await result.response;
-        const text = response.text();
-        console.log('📝 Response text length:', text.length);
+            const response = await result.response;
+            const text = response.text();
+            console.log('📝 Response text length:', text.length);
 
-        // Extract JSON from response
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-            console.error('❌ No JSON found in response');
-            throw new Error('No JSON found in response');
-        }
+            // Extract JSON from response
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) {
+                console.error('❌ No JSON found in response');
+                throw new Error('No JSON found in response');
+            }
 
-        const data = JSON.parse(jsonMatch[0]);
-        const questions = data.questions as Question[];
-        console.log('✅ Successfully parsed', questions.length, 'questions');
+            const data = JSON.parse(jsonMatch[0]);
+            const questions = data.questions as Question[];
+            console.log('✅ Successfully parsed', questions.length, 'questions');
 
-        // Calculate distribution
-        const distribution = {
-            nhận_biết: questions.filter(q => q.cognitiveLevel === 'nhận_biết').length,
-            thông_hiểu: questions.filter(q => q.cognitiveLevel === 'thông_hiểu').length,
-            vận_dụng: questions.filter(q => q.cognitiveLevel === 'vận_dụng').length
-        };
+            // Calculate distribution
+            const distribution = {
+                nhận_biết: questions.filter(q => q.cognitiveLevel === 'nhận_biết').length,
+                thông_hiểu: questions.filter(q => q.cognitiveLevel === 'thông_hiểu').length,
+                vận_dụng: questions.filter(q => q.cognitiveLevel === 'vận_dụng').length
+            };
 
-        return {
-            lessonTitle,
-            topicTitle,
-            grade,
-            questions,
-            totalScore: questions.length,
-            distribution
-        };
-    } catch (error) {
-        console.error('❌ Error generating mixed exam:', error);
+            return {
+                lessonTitle,
+                topicTitle,
+                grade,
+                questions,
+                totalScore: questions.length,
+                distribution
+            };
+        }, 3, 2000); // 3 retries with 2 second initial delay
+    }).catch(error => {
+        console.error('❌ Error generating mixed exam after retries:', error);
         console.log('🔄 Using fallback exam instead');
-        // Return fallback exam
         return generateFallbackMixedExam(grade, topicTitle, lessonTitle);
-    }
+    });
 }
 
 // Calculate exam score
@@ -167,24 +239,40 @@ export function calculateScore(
     answers: Record<string, any>
 ): ExamResult {
     let correctCount = 0;
+    const byLevel: Record<string, { correct: number; total: number }> = {
+        nhận_biết: { correct: 0, total: 0 },
+        thông_hiểu: { correct: 0, total: 0 },
+        vận_dụng: { correct: 0, total: 0 }
+    };
 
     exam.questions.forEach(question => {
         const userAnswer = answers[question.id];
         const isCorrect = checkAnswer(question, userAnswer);
+
+        // Update overall count
         if (isCorrect) correctCount++;
+
+        // Update by level
+        const level = question.cognitiveLevel;
+        if (byLevel[level]) {
+            byLevel[level].total++;
+            if (isCorrect) byLevel[level].correct++;
+        }
     });
 
     const score = correctCount;
-    const totalScore = exam.questions.length;
-    const percentage = (score / totalScore) * 100;
+    const totalQuestions = exam.questions.length;
+    const percentage = (score / totalQuestions) * 100;
 
     return {
         examId: `${exam.grade}-${exam.lessonTitle}`,
         studentId: '', // to be filled by caller
         answers,
         score,
-        totalScore,
+        totalQuestions,
+        totalScore: exam.totalScore,
         percentage,
+        byLevel,
         completedAt: new Date().toISOString()
     };
 }
@@ -565,9 +653,17 @@ export async function generateInteractiveSimulation(
         return createFallbackSimulation(lessonTitle);
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+    return queueRequest(async () => {
+        return retryWithBackoff(async () => {
+            const model = genAI.getGenerativeModel({
+                model: 'gemini-1.5-flash-latest',
+                generationConfig: {
+                    temperature: 0.8,
+                    maxOutputTokens: 4096,
+                }
+            });
 
-    const prompt = `Bạn là chuyên gia thiết kế game giáo dục mỹ thuật. Tạo một trò chơi/mô phỏng tương tác cho bài học "${lessonTitle}" lớp ${grade} (SGK Mỹ thuật - Kết nối tri thức).
+            const prompt = `Bạn là chuyên gia thiết kế game giáo dục mỹ thuật. Tạo một trò chơi/mô phỏng tương tác cho bài học "${lessonTitle}" lớp ${grade} (SGK Mỹ thuật - Kết nối tri thức).
 
 Yêu cầu:
 - Tạo game tương tác phù hợp với nội dung bài học
@@ -616,30 +712,30 @@ Trả về JSON với cấu trúc:
 
 Hãy sáng tạo game phù hợp với nội dung bài học cụ thể.`;
 
-    try {
-        console.log('📡 Calling Gemini API for simulation...');
-        const result = await withTimeout(model.generateContent(prompt), 30000);
-        console.log('✅ Simulation API response received');
+            console.log('📡 Calling Gemini API for simulation...');
+            const result = await withTimeout(model.generateContent(prompt), 45000);
+            console.log('✅ Simulation API response received');
 
-        const response = await result.response;
-        const text = response.text();
-        console.log('📝 Simulation response length:', text.length);
+            const response = await result.response;
+            const text = response.text();
+            console.log('📝 Simulation response length:', text.length);
 
-        // Extract JSON from response
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-            const gameData = JSON.parse(jsonMatch[0]);
-            console.log('✅ Successfully parsed simulation game');
-            return gameData;
-        }
+            // Extract JSON from response
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                const gameData = JSON.parse(jsonMatch[0]);
+                console.log('✅ Successfully parsed simulation game');
+                return gameData;
+            }
 
-        console.warn('⚠️ No JSON in simulation response, using fallback');
-        return createFallbackSimulation(lessonTitle);
-    } catch (error) {
-        console.error('❌ Error generating simulation:', error);
+            console.warn('⚠️ No JSON in simulation response, using fallback');
+            return createFallbackSimulation(lessonTitle);
+        }, 3, 2000);
+    }).catch(error => {
+        console.error('❌ Error generating simulation after retries:', error);
         console.log('🔄 Using fallback simulation');
         return createFallbackSimulation(lessonTitle);
-    }
+    });
 }
 
 function createFallbackSimulation(lessonTitle: string): any {
