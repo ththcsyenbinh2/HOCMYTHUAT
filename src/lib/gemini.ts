@@ -26,7 +26,7 @@ export async function generateMixedExam(
     topicTitle: string,
     lessonTitle: string
 ): Promise<MixedExam> {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
     const prompt = `Bạn là chuyên gia giáo dục môn Mĩ thuật. Tạo đúng 15 đến 20 câu hỏi cho bài học "${lessonTitle}" lớp ${grade} ("Sách giáo khoa Mĩ thuật – Kết nối tri thức với cuộc sống").
 
@@ -268,7 +268,7 @@ export async function generateExercise(
     lessonName: string,
     exerciseType: ExerciseType
 ): Promise<ExerciseData> {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
     let prompt = '';
 
@@ -532,7 +532,7 @@ export async function generateInteractiveSimulation(
     grade: number,
     lessonTitle: string
 ): Promise<any> {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
     const prompt = `Bạn là chuyên gia thiết kế game giáo dục mỹ thuật. Tạo một trò chơi/mô phỏng tương tác cho bài học "${lessonTitle}" lớp ${grade} (SGK Mỹ thuật - Kết nối tri thức).
 
