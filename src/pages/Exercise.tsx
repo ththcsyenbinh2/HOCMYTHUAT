@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { getLessonTypeById, getTopicById } from '@/data/curriculum';
+import { getLessonById } from '@/data/curriculum';
 import { generateExercise } from '@/lib/gemini';
 import { saveExerciseResult, calculatePercentage, getGradeLabel } from '@/services/database';
 import { ExerciseData, ExerciseType } from '@/types';
@@ -19,7 +19,7 @@ const EXERCISE_TYPES: { type: ExerciseType; name: string; icon: string }[] = [
 ];
 
 export default function Exercise() {
-    const { lessonTypeId } = useParams();
+    const { grade, topicId, lessonId } = useParams();
     const navigate = useNavigate();
     const { student } = useAuth();
 
@@ -31,13 +31,15 @@ export default function Exercise() {
     const [score, setScore] = useState(0);
     const [total, setTotal] = useState(0);
 
-    const lessonType = getLessonTypeById(lessonTypeId || '');
-    const topicId = lessonTypeId?.split('-lesson')[0];
-    const topic = getTopicById(topicId || '');
+    const gradeNum = parseInt(grade || '6') as 6 | 7 | 8 | 9;
+    const lessonIdNum = parseInt(lessonId || '1');
+    const lessonData = getLessonById(gradeNum, lessonIdNum);
 
-    if (!student || !lessonType || !topic) {
+    if (!student || !lessonData) {
         return null;
     }
+
+    const { lesson, topic } = lessonData;
 
     const handleGenerateExercise = async (type: ExerciseType) => {
         setSelectedType(type);
@@ -47,7 +49,7 @@ export default function Exercise() {
         setIsSubmitted(false);
 
         try {
-            const data = await generateExercise(student.grade, topic.name, lessonType.name, type);
+            const data = await generateExercise(student.grade, topic.title, lesson.title, type);
             setExerciseData(data);
         } catch (error) {
             console.error('Error generating exercise:', error);
@@ -100,8 +102,8 @@ export default function Exercise() {
         await saveExerciseResult(
             student.id,
             student.grade,
-            topic.name,
-            lessonType.name,
+            topic.title,
+            lesson.title,
             exerciseData.type,
             correctCount,
             totalQuestions,
@@ -117,8 +119,8 @@ export default function Exercise() {
                         ← Quay lại
                     </Button>
                     <div className="exercise-info">
-                        <h1>{lessonType.name}</h1>
-                        <p className="text-secondary">{topic.name}</p>
+                        <h1>{lesson.title}</h1>
+                        <p className="text-secondary">{topic.title}</p>
                     </div>
                 </div>
             </header>
