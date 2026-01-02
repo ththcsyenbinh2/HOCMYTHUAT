@@ -6,70 +6,138 @@ export const curriculum: GradeCurriculum[] = [
         grade: 6,
         topics: [
             {
-                id: 'grade6-topic1',
-                name: 'Xây dựng ý tưởng trong sáng tác mỹ thuật',
+                id: 'grade6-topicI',
+                name: 'Chủ đề 1: Xây dựng ý tưởng trong sáng tác mĩ thuật',
                 description: 'Tìm hiểu cách xây dựng ý tưởng và thể loại mỹ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade6-topic1-lesson1',
-                        name: 'Tạo hình trong sáng tác mỹ thuật',
-                        description: 'Học cách tạo hình và phát triển ý tưởng sáng tạo'
+                        id: 'grade6-topicI-lesson1',
+                        name: 'Bài 1: Một số thể loại mĩ thuật',
+                        description: 'Tìm hiểu về các thể loại mỹ thuật khác nhau'
                     },
                     {
-                        id: 'grade6-topic1-lesson2',
-                        name: 'Các thể loại mỹ thuật',
-                        description: 'Tìm hiểu về các thể loại mỹ thuật khác nhau'
+                        id: 'grade6-topicI-lesson2',
+                        name: 'Bài 2: Xây dựng ý tưởng trong sáng tác theo chủ đề',
+                        description: 'Học cách xây dựng ý tưởng sáng tạo theo chủ đề'
                     }
                 ]
             },
             {
-                id: 'grade6-topic2',
-                name: 'Ngôi nhà yêu thương',
+                id: 'grade6-topicII',
+                name: 'Chủ đề 2: Ngôi nhà yêu thương',
                 description: 'Khám phá vẻ đẹp của ngôi nhà qua nghệ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade6-topic2-lesson1',
-                        name: 'Tạo hình ngôi nhà',
+                        id: 'grade6-topicII-lesson1',
+                        name: 'Bài 3: Tạo hình ngôi nhà',
                         description: 'Vẽ và tạo hình ngôi nhà trong tác phẩm mỹ thuật'
                     },
                     {
-                        id: 'grade6-topic2-lesson2',
-                        name: 'Thiết kế quà lưu niệm',
+                        id: 'grade6-topicII-lesson2',
+                        name: 'Bài 4: Thiết kế quà lưu niệm',
                         description: 'Thiết kế quà lưu niệm với chủ đề ngôi nhà'
                     }
                 ]
             },
             {
-                id: 'grade6-topic3',
-                name: 'Hoạt động trong trường học',
+                id: 'grade6-topicIII',
+                name: 'Chủ đề 3: Hoạt động trong trường học',
                 description: 'Thể hiện các hoạt động học đường qua mỹ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade6-topic3-lesson1',
-                        name: 'Tạo hình hoạt động học đường',
+                        id: 'grade6-topicIII-lesson1',
+                        name: 'Bài 5: Tạo hình hoạt động trong nhà trường',
                         description: 'Vẽ các hoạt động trong trường học'
                     },
                     {
-                        id: 'grade6-topic3-lesson2',
-                        name: 'Thiết kế và tạo dáng đồ chơi',
+                        id: 'grade6-topicIII-lesson2',
+                        name: 'Bài 6: Thiết kế đồ chơi',
                         description: 'Thiết kế đồ chơi sáng tạo'
                     }
                 ]
             },
             {
-                id: 'grade6-topic4',
-                name: 'Mỹ thuật thời kỳ tiền sử',
+                id: 'grade6-topicIV',
+                name: 'Chủ đề 4: Mĩ thuật thời kì tiền sử',
                 description: 'Khám phá mỹ thuật thế giới và Việt Nam thời tiền sử',
                 lessonTypes: [
                     {
-                        id: 'grade6-topic4-lesson1',
-                        name: 'Mỹ thuật thế giới thời tiền sử',
+                        id: 'grade6-topicIV-lesson1',
+                        name: 'Bài 7: Mĩ thuật thế giới thời kì tiền sử',
                         description: 'Tìm hiểu nghệ thuật hang động và tạo hình nguyên thủy'
                     },
                     {
-                        id: 'grade6-topic4-lesson2',
-                        name: 'Mỹ thuật Việt Nam thời tiền sử',
+                        id: 'grade6-topicIV-lesson2',
+                        name: 'Bài 8: Mĩ thuật Việt Nam thời kì tiền sử',
                         description: 'Khám phá văn hóa Đông Sơn và nghệ thuật cổ Việt Nam'
+                    }
+                ]
+            },
+            {
+                id: 'grade6-topicV',
+                name: 'Chủ đề 5: Trò chơi dân gian',
+                description: 'Khám phá trò chơi dân gian qua nghệ thuật',
+                lessonTypes: [
+                    {
+                        id: 'grade6-topicV-lesson1',
+                        name: 'Bài 9: Sáng tạo mĩ thuật với trò chơi dân gian',
+                        description: 'Thể hiện trò chơi dân gian trong sáng tác mỹ thuật'
+                    },
+                    {
+                        id: 'grade6-topicV-lesson2',
+                        name: 'Bài 10: Thiết kế thiệp chúc mừng',
+                        description: 'Thiết kế thiệp chúc mừng sáng tạo'
+                    }
+                ]
+            },
+            {
+                id: 'grade6-topicVI',
+                name: 'Chủ đề 6: Sắc màu lễ hội',
+                description: 'Khám phá màu sắc và không khí lễ hội',
+                lessonTypes: [
+                    {
+                        id: 'grade6-topicVI-lesson1',
+                        name: 'Bài 11: Hoà sắc trong tranh chủ đề lễ hội',
+                        description: 'Học cách phối màu trong tranh lễ hội'
+                    },
+                    {
+                        id: 'grade6-topicVI-lesson2',
+                        name: 'Bài 12: Màu sắc lễ hội trong thiết kế lịch treo tường',
+                        description: 'Thiết kế lịch treo tường với chủ đề lễ hội'
+                    }
+                ]
+            },
+            {
+                id: 'grade6-topicVII',
+                name: 'Chủ đề 7: Cuộc sống thường ngày',
+                description: 'Thể hiện cuộc sống hàng ngày qua nghệ thuật',
+                lessonTypes: [
+                    {
+                        id: 'grade6-topicVII-lesson1',
+                        name: 'Bài 13: Sáng tạo mĩ thuật với hình ảnh trong cuộc sống',
+                        description: 'Vẽ tranh về cuộc sống thường ngày'
+                    },
+                    {
+                        id: 'grade6-topicVII-lesson2',
+                        name: 'Bài 14: Thiết kế thời gian biểu',
+                        description: 'Thiết kế thời gian biểu sáng tạo'
+                    }
+                ]
+            },
+            {
+                id: 'grade6-topicVIII',
+                name: 'Chủ đề 8: Mĩ thuật thời kì cổ đại',
+                description: 'Tìm hiểu mỹ thuật thế giới và Việt Nam thời cổ đại',
+                lessonTypes: [
+                    {
+                        id: 'grade6-topicVIII-lesson1',
+                        name: 'Bài 15: Mĩ thuật thế giới thời kì cổ đại',
+                        description: 'Nghiên cứu mỹ thuật các nền văn minh cổ đại'
+                    },
+                    {
+                        id: 'grade6-topicVIII-lesson2',
+                        name: 'Bài 16: Mĩ thuật Việt Nam thời kì cổ đại',
+                        description: 'Khám phá di sản mỹ thuật Việt Nam cổ đại'
                     }
                 ]
             }
@@ -79,120 +147,137 @@ export const curriculum: GradeCurriculum[] = [
         grade: 7,
         topics: [
             {
-                id: 'grade7-topic1',
-                name: 'Mỹ thuật thế giới thời kỳ trung đại',
+                id: 'grade7-topicI',
+                name: 'Chủ đề 1: Mĩ thuật thế giới thời kì trung đại',
                 description: 'Tìm hiểu nghệ thuật thế giới thời trung đại',
                 lessonTypes: [
                     {
-                        id: 'grade7-topic1-lesson1',
-                        name: 'Mỹ thuật tạo hình thời trung đại',
+                        id: 'grade7-topicI-lesson1',
+                        name: 'Bài 1: Mĩ thuật tạo hình thời kì trung đại',
                         description: 'Nghiên cứu hội họa và điêu khắc thời trung đại'
                     },
                     {
-                        id: 'grade7-topic1-lesson2',
-                        name: 'Mỹ thuật ứng dụng thời trung đại',
+                        id: 'grade7-topicI-lesson2',
+                        name: 'Bài 2: Mĩ thuật ứng dụng thời kì trung đại',
                         description: 'Khám phá kiến trúc và trang trí thời trung đại'
                     }
                 ]
             },
             {
-                id: 'grade7-topic2',
-                name: 'Vẻ đẹp di tích',
+                id: 'grade7-topicII',
+                name: 'Chủ đề 2: Vẻ đẹp di tích',
                 description: 'Khám phá và thể hiện vẻ đẹp di tích lịch sử',
                 lessonTypes: [
                     {
-                        id: 'grade7-topic2-lesson1',
-                        name: 'Hình ảnh di tích trong sáng tạo',
+                        id: 'grade7-topicII-lesson1',
+                        name: 'Bài 3: Hình ảnh di tích trong sáng tạo mĩ thuật',
                         description: 'Vẽ và tạo hình các di tích lịch sử'
                     },
                     {
-                        id: 'grade7-topic2-lesson2',
-                        name: 'Thiết kế tem bưu chính',
+                        id: 'grade7-topicII-lesson2',
+                        name: 'Bài 4: Hình ảnh di tích trong thiết kế tem bưu chính',
                         description: 'Thiết kế tem với hình ảnh di tích'
                     }
                 ]
             },
             {
-                id: 'grade7-topic3',
-                name: 'Yếu tố dân tộc trong mỹ thuật',
+                id: 'grade7-topicIII',
+                name: 'Chủ đề 3: Yếu tố dân tộc trong mĩ thuật',
                 description: 'Tìm hiểu đặc trưng dân tộc trong nghệ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade7-topic3-lesson1',
-                        name: 'Tranh của các họa sĩ dân tộc',
+                        id: 'grade7-topicIII-lesson1',
+                        name: 'Bài 5: Yếu tố dân tộc trong tranh của một số họa sĩ',
                         description: 'Nghiên cứu tác phẩm của họa sĩ dân tộc Việt Nam'
                     },
                     {
-                        id: 'grade7-topic3-lesson2',
-                        name: 'Thiết kế logo dân tộc',
+                        id: 'grade7-topicIII-lesson2',
+                        name: 'Bài 6: Thiết kế logo',
                         description: 'Tạo logo với yếu tố văn hóa dân tộc'
                     }
                 ]
             },
             {
-                id: 'grade7-topic4',
-                name: 'Vẻ đẹp trong tác phẩm hội họa',
+                id: 'grade7-topicIV',
+                name: 'Chủ đề 4: Vẻ đẹp trong tác phẩm hội họa',
                 description: 'Phân tích và cảm nhận vẻ đẹp trong tranh',
                 lessonTypes: [
                     {
-                        id: 'grade7-topic4-lesson1',
-                        name: 'Không gian trong hội họa',
+                        id: 'grade7-topicIV-lesson1',
+                        name: 'Bài 7: Không gian trong tác phẩm hội họa trung đại',
                         description: 'Tìm hiểu cách tạo không gian trong tranh'
                     },
                     {
-                        id: 'grade7-topic4-lesson2',
-                        name: 'Tranh tĩnh vật',
+                        id: 'grade7-topicIV-lesson2',
+                        name: 'Bài 8: Tranh tĩnh vật',
                         description: 'Vẽ và cảm nhận tranh tĩnh vật'
                     }
                 ]
             },
             {
-                id: 'grade7-topic5',
-                name: 'Hiện thực cuộc sống trong sáng tạo mỹ thuật',
+                id: 'grade7-topicV',
+                name: 'Chủ đề 5: Hiện thực cuộc sống trong sáng tạo mĩ thuật',
                 description: 'Thể hiện cuộc sống thực qua nghệ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade7-topic5-lesson1',
-                        name: 'Nguồn sáng trong tranh',
+                        id: 'grade7-topicV-lesson1',
+                        name: 'Bài 9: Tìm hiểu nguồn sáng trong tranh',
                         description: 'Nghiên cứu ánh sáng và bóng tối trong hội họa'
                     },
                     {
-                        id: 'grade7-topic5-lesson2',
-                        name: 'Thiết kế trang phục',
+                        id: 'grade7-topicV-lesson2',
+                        name: 'Bài 10: Thiết kế tạo mẫu trang phục',
                         description: 'Tạo mẫu trang phục từ cuộc sống'
                     }
                 ]
             },
             {
-                id: 'grade7-topic6',
-                name: 'Sum họp gia đình',
+                id: 'grade7-topicVI',
+                name: 'Chủ đề 6: Tạo hình ngôi nhà trong sáng tạo mĩ thuật',
+                description: 'Thể hiện ngôi nhà qua các vật liệu khác nhau',
+                lessonTypes: [
+                    {
+                        id: 'grade7-topicVI-lesson1',
+                        name: 'Bài 11: Tạo hình ngôi nhà từ vật liệu sẵn có',
+                        description: 'Sáng tạo mô hình ngôi nhà'
+                    },
+                    {
+                        id: 'grade7-topicVI-lesson2',
+                        name: 'Bài 12: Tranh cổ động',
+                        description: 'Vẽ tranh cổ động tuyên truyền'
+                    }
+                ]
+            },
+            {
+                id: 'grade7-topicVII',
+                name: 'Chủ đề 7: Sum họp gia đình',
                 description: 'Thể hiện đề tài gia đình trong mỹ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade7-topic6-lesson1',
-                        name: 'Đề tài gia đình trong sáng tạo',
+                        id: 'grade7-topicVII-lesson1',
+                        name: 'Bài 13: Đề tài gia đình trong sáng tạo mĩ thuật',
                         description: 'Vẽ tranh với chủ đề gia đình'
                     },
                     {
-                        id: 'grade7-topic6-lesson2',
-                        name: 'Thiết kế khung ảnh',
+                        id: 'grade7-topicVII-lesson2',
+                        name: 'Bài 14: Thiết kế khung ảnh từ vật liệu sẵn có',
                         description: 'Làm khung ảnh từ vật liệu sẵn có'
                     }
                 ]
             },
             {
-                id: 'grade7-topic7',
-                name: 'Mỹ thuật Việt Nam thời kỳ trung đại',
+                id: 'grade7-topicVIII',
+                name: 'Chủ đề 8: Mĩ thuật Việt Nam thời kì trung đại',
                 description: 'Khám phá di sản mỹ thuật Việt Nam thời trung đại',
                 lessonTypes: [
                     {
-                        id: 'grade7-topic7-lesson1',
-                        name: 'Di sản mỹ thuật trung đại',
+                        id: 'grade7-topicVIII-lesson1',
+                        name: 'Bài 15: Di sản mĩ thuật Việt Nam thời kì trung đại',
                         description: 'Tìm hiểu kiến trúc và điêu khắc Việt Nam thời trung đại'
                     },
                     {
-                        id: 'grade7-topic7-lesson2',
-                        name: 'Khai thác giá trị mỹ thuật',
+                        id: 'grade7-topicVIII-lesson2',
+                        name: 'Bài 16: Khai thác giá trị tạo hình truyền thống',
                         description: 'Ứng dụng giá trị mỹ thuật truyền thống'
                     }
                 ]
@@ -203,104 +288,138 @@ export const curriculum: GradeCurriculum[] = [
         grade: 8,
         topics: [
             {
-                id: 'grade8-topic1',
-                name: 'Hình tượng con người trong mỹ thuật',
+                id: 'grade8-topicI',
+                name: 'Chủ đề 1: Hình tượng con người trong mĩ thuật',
                 description: 'Tìm hiểu cách thể hiện con người trong nghệ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade8-topic1-lesson1',
-                        name: 'Tạo hình con người',
+                        id: 'grade8-topicI-lesson1',
+                        name: 'Bài 1: Hình tượng con người trong sáng tạo mĩ thuật',
                         description: 'Vẽ chân dung và hình thể con người'
                     },
                     {
-                        id: 'grade8-topic1-lesson2',
-                        name: 'Bố cục trong tranh sinh hoạt',
+                        id: 'grade8-topicI-lesson2',
+                        name: 'Bài 2: Một số dạng bố cục trong tranh sinh hoạt',
                         description: 'Học các dạng bố cục khi vẽ người'
                     }
                 ]
             },
             {
-                id: 'grade8-topic2',
-                name: 'Vẻ đẹp trong nghệ thuật truyền thống',
+                id: 'grade8-topicII',
+                name: 'Chủ đề 2: Vẻ đẹp trong nghệ thuật truyền thống',
                 description: 'Khám phá giá trị nghệ thuật truyền thống',
                 lessonTypes: [
                     {
-                        id: 'grade8-topic2-lesson1',
-                        name: 'Nghệ thuật truyền thống Việt Nam',
+                        id: 'grade8-topicII-lesson1',
+                        name: 'Bài 3: Nghệ thuật truyền thống',
                         description: 'Tìm hiểu tranh dân gian, đồ gốm truyền thống'
                     },
                     {
-                        id: 'grade8-topic2-lesson2',
-                        name: 'Thiết kế trang phục dân tộc',
+                        id: 'grade8-topicII-lesson2',
+                        name: 'Bài 4: Thiết kế trang phục với hoa văn dân tộc thiểu số',
                         description: 'Tạo trang phục với hoa văn dân tộc thiểu số'
                     }
                 ]
             },
             {
-                id: 'grade8-topic3',
-                name: 'Niềm vui, hạnh phúc',
+                id: 'grade8-topicIII',
+                name: 'Chủ đề 3: Niềm vui, hạnh phúc',
                 description: 'Thể hiện cảm xúc tích cực qua mỹ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade8-topic3-lesson1',
-                        name: 'Niềm vui trong tác phẩm hội họa',
+                        id: 'grade8-topicIII-lesson1',
+                        name: 'Bài 5: Tác phẩm hội họa chủ đề niềm vui, hạnh phúc',
                         description: 'Vẽ tranh thể hiện niềm vui và hạnh phúc'
                     },
                     {
-                        id: 'grade8-topic3-lesson2',
-                        name: 'Thiết kế quà sinh nhật',
+                        id: 'grade8-topicIII-lesson2',
+                        name: 'Bài 6: Thiết kế quà sinh nhật từ vật liệu sẵn có',
                         description: 'Tạo quà tặng sinh nhật sáng tạo'
                     }
                 ]
             },
             {
-                id: 'grade8-topic4',
-                name: 'Mỹ thuật thế giới thời kỳ hiện đại',
+                id: 'grade8-topicIV',
+                name: 'Chủ đề 4: Mĩ thuật thế giới thời kì hiện đại',
                 description: 'Tìm hiểu các trường phái mỹ thuật hiện đại',
                 lessonTypes: [
                     {
-                        id: 'grade8-topic4-lesson1',
-                        name: 'Trường phái mỹ thuật phương Tây',
+                        id: 'grade8-topicIV-lesson1',
+                        name: 'Bài 7: Một số trường phái mĩ thuật phương Tây hiện đại',
                         description: 'Nghiên cứu ấn tượng, lập thể, siêu thực'
                     },
                     {
-                        id: 'grade8-topic4-lesson2',
-                        name: 'Nghệ thuật trang trí đồ gia dụng',
+                        id: 'grade8-topicIV-lesson2',
+                        name: 'Bài 8: Nghệ thuật trang trí đồ gia dụng',
                         description: 'Trang trí đồ vật theo phong cách hiện đại'
                     }
                 ]
             },
             {
-                id: 'grade8-topic5',
-                name: 'Vẻ đẹp trong lao động',
+                id: 'grade8-topicV',
+                name: 'Chủ đề 5: Vẻ đẹp trong lao động',
                 description: 'Tôn vinh vẻ đẹp của người lao động',
                 lessonTypes: [
                     {
-                        id: 'grade8-topic5-lesson1',
-                        name: 'Người lao động trong sáng tạo',
+                        id: 'grade8-topicV-lesson1',
+                        name: 'Bài 9: Vẻ đẹp người lao động trong sáng tạo mĩ thuật',
                         description: 'Vẽ tranh về người lao động'
                     },
                     {
-                        id: 'grade8-topic5-lesson2',
-                        name: 'Nghệ thuật trổ giấy',
+                        id: 'grade8-topicV-lesson2',
+                        name: 'Bài 10: Nghệ thuật trổ giấy trong trang trí',
                         description: 'Tạo tác phẩm trổ giấy với chủ đề lao động'
                     }
                 ]
             },
             {
-                id: 'grade8-topic6',
-                name: 'Giao thông công cộng',
+                id: 'grade8-topicVI',
+                name: 'Chủ đề 6: Giao thông công cộng trong sáng tạo mĩ thuật',
                 description: 'Thể hiện giao thông đô thị qua mỹ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade8-topic6-lesson1',
-                        name: 'Giao thông trong sáng tạo mỹ thuật',
+                        id: 'grade8-topicVI-lesson1',
+                        name: 'Bài 11: Phương tiện giao thông công cộng trong mĩ thuật',
                         description: 'Vẽ tranh về phương tiện giao thông'
                     },
                     {
-                        id: 'grade8-topic6-lesson2',
-                        name: 'Thiết kế poster an toàn giao thông',
-                        description: 'Tạo poster tuyên truyền giao thông'
+                        id: 'grade8-topicVI-lesson2',
+                        name: 'Bài 12: Thiết kế trang trí áo phông',
+                        description: 'Tạo poster tuyên truyền giao thông trên áo phông'
+                    }
+                ]
+            },
+            {
+                id: 'grade8-topicVII',
+                name: 'Chủ đề 7: Mĩ thuật Việt Nam thời kì hiện đại',
+                description: 'Tìm hiểu nghệ thuật đương đại Việt Nam',
+                lessonTypes: [
+                    {
+                        id: 'grade8-topicVII-lesson1',
+                        name: 'Bài 13: Một số tác giả, tác phẩm mĩ thuật Việt Nam hiện đại',
+                        description: 'Nghiên cứu tác giả, tác phẩm Việt Nam hiện đại'
+                    },
+                    {
+                        id: 'grade8-topicVII-lesson2',
+                        name: 'Bài 14: Nghệ thuật thiết kế Việt Nam thời kì hiện đại',
+                        description: 'Tìm hiểu thiết kế Việt Nam thời kì hiện đại'
+                    }
+                ]
+            },
+            {
+                id: 'grade8-topicVIII',
+                name: 'Chủ đề 8: Hướng nghiệp',
+                description: 'Giới thiệu nghề nghiệp liên quan đến mỹ thuật',
+                lessonTypes: [
+                    {
+                        id: 'grade8-topicVIII-lesson1',
+                        name: 'Bài 15: Ngành nghề liên quan đến mĩ thuật tạo hình',
+                        description: 'Tìm hiểu các ngành nghề mĩ thuật tạo hình'
+                    },
+                    {
+                        id: 'grade8-topicVIII-lesson2',
+                        name: 'Bài 16: Đặc trưng ngành nghề mĩ thuật tạo hình',
+                        description: 'Khám phá yêu cầu và kỹ năng nghề mĩ thuật tạo hình'
                     }
                 ]
             }
@@ -310,138 +429,138 @@ export const curriculum: GradeCurriculum[] = [
         grade: 9,
         topics: [
             {
-                id: 'grade9-topic1',
-                name: 'Cuộc sống muôn màu',
+                id: 'grade9-topicI',
+                name: 'Chủ đề 1: Cuộc sống muôn màu',
                 description: 'Thể hiện sự đa dạng của cuộc sống',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic1-lesson1',
-                        name: 'Vẻ đẹp cuộc sống trong tác phẩm',
+                        id: 'grade9-topicI-lesson1',
+                        name: 'Bài 1: Vẻ đẹp cuộc sống trong tác phẩm mĩ thuật',
                         description: 'Vẽ tranh về cuộc sống hàng ngày'
                     },
                     {
-                        id: 'grade9-topic1-lesson2',
-                        name: 'Thiết kế phụ kiện thời trang',
+                        id: 'grade9-topicI-lesson2',
+                        name: 'Bài 2: Thiết kế phụ kiện thời trang',
                         description: 'Tạo phụ kiện thời trang sáng tạo'
                     }
                 ]
             },
             {
-                id: 'grade9-topic2',
-                name: 'Nghệ thuật đương đại thế giới',
+                id: 'grade9-topicII',
+                name: 'Chủ đề 2: Nghệ thuật đương đại thế giới',
                 description: 'Tìm hiểu xu hướng nghệ thuật đương đại',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic2-lesson1',
-                        name: 'Trào lưu nghệ thuật đương đại',
+                        id: 'grade9-topicII-lesson1',
+                        name: 'Bài 3: Một số trào lưu nghệ thuật đương đại thế giới',
                         description: 'Nghiên cứu các trào lưu nghệ thuật mới'
                     },
                     {
-                        id: 'grade9-topic2-lesson2',
-                        name: 'Thiết kế đương đại',
-                        description: 'Đặc điểm thiết kế trong thời kỳ đương đại'
+                        id: 'grade9-topicII-lesson2',
+                        name: 'Bài 4: Thiết kế giá đỡ thiết bị công nghệ',
+                        description: 'Đặc điểm thiết kế giá đỡ thiết bị công nghệ'
                     }
                 ]
             },
             {
-                id: 'grade9-topic3',
-                name: 'Thiết kế mỹ thuật sách',
+                id: 'grade9-topicIII',
+                name: 'Chủ đề 3: Thiết kế mĩ thuật sách',
                 description: 'Học thiết kế sách và minh họa',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic3-lesson1',
-                        name: 'Thiết kế bìa sách',
+                        id: 'grade9-topicIII-lesson1',
+                        name: 'Bài 5: Thiết kế bìa sách',
                         description: 'Tạo bìa sách hấp dẫn và chuyên nghiệp'
                     },
                     {
-                        id: 'grade9-topic3-lesson2',
-                        name: 'Tranh minh họa',
+                        id: 'grade9-topicIII-lesson2',
+                        name: 'Bài 6: Tranh minh họa',
                         description: 'Vẽ tranh minh họa cho sách'
                     }
                 ]
             },
             {
-                id: 'grade9-topic4',
-                name: 'Cảm hứng trong sáng tác mỹ thuật',
+                id: 'grade9-topicIV',
+                name: 'Chủ đề 4: Cảm hứng trong sáng tác mĩ thuật',
                 description: 'Khám phá nguồn cảm hứng sáng tạo',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic4-lesson1',
-                        name: 'Cảm hứng trong hội họa',
+                        id: 'grade9-topicIV-lesson1',
+                        name: 'Bài 7: Cảm hứng trong sáng tác hội họa',
                         description: 'Tìm và phát triển cảm hứng vẽ tranh'
                     },
                     {
-                        id: 'grade9-topic4-lesson2',
-                        name: 'Thiết kế nhận diện thương hiệu',
+                        id: 'grade9-topicIV-lesson2',
+                        name: 'Bài 8: Thiết kế hình ảnh nhận diện thương hiệu',
                         description: 'Tạo hình ảnh nhận diện thương hiệu'
                     }
                 ]
             },
             {
-                id: 'grade9-topic5',
-                name: 'Vẻ đẹp của nguyên mẫu',
+                id: 'grade9-topicV',
+                name: 'Chủ đề 5: Vẻ đẹp nguyên mẫu trong thực hành sáng tạo',
                 description: 'Nghiên cứu nguyên mẫu trong nghệ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic5-lesson1',
-                        name: 'Tỷ lệ và hình khối',
+                        id: 'grade9-topicV-lesson1',
+                        name: 'Bài 9: Tỉ lệ và hình khối của đồ vật',
                         description: 'Học về tỷ lệ và hình khối của đồ vật'
                     },
                     {
-                        id: 'grade9-topic5-lesson2',
-                        name: 'Nguyên mẫu trong điêu khắc',
+                        id: 'grade9-topicV-lesson2',
+                        name: 'Bài 10: Nguyên mẫu trong tác phẩm điêu khắc',
                         description: 'Tìm hiểu nguyên mẫu trong tác phẩm điêu khắc'
                     }
                 ]
             },
             {
-                id: 'grade9-topic6',
-                name: 'Nghệ thuật múa rối',
+                id: 'grade9-topicVI',
+                name: 'Chủ đề 6: Nghệ thuật múa rối',
                 description: 'Khám phá nghệ thuật múa rối truyền thống',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic6-lesson1',
-                        name: 'Vẻ đẹp tạo hình con rối',
+                        id: 'grade9-topicVI-lesson1',
+                        name: 'Bài 11: Vẻ đẹp tạo hình con rối',
                         description: 'Nghiên cứu tạo hình con rối'
                     },
                     {
-                        id: 'grade9-topic6-lesson2',
-                        name: 'Tạo hình nhân vật múa rối nước',
+                        id: 'grade9-topicVI-lesson2',
+                        name: 'Bài 12: Tạo hình nhân vật múa rối nước',
                         description: 'Thiết kế nhân vật múa rối nước'
                     }
                 ]
             },
             {
-                id: 'grade9-topic7',
-                name: 'Nghệ thuật đương đại Việt Nam',
+                id: 'grade9-topicVII',
+                name: 'Chủ đề 7: Mĩ thuật đương đại Việt Nam',
                 description: 'Tìm hiểu nghệ thuật đương đại Việt Nam',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic7-lesson1',
-                        name: 'Phong cách sáng tác đương đại',
-                        description: 'Nghiên cứu phong cách nghệ sĩ Việt Nam đương đại'
+                        id: 'grade9-topicVII-lesson1',
+                        name: 'Bài 13: Khuynh hướng sáng tác mĩ thuật',
+                        description: 'Nghiên cứu khuynh hướng sáng tác Việt Nam đương đại'
                     },
                     {
-                        id: 'grade9-topic7-lesson2',
-                        name: 'Thiết kế sản phẩm tái sử dụng',
+                        id: 'grade9-topicVII-lesson2',
+                        name: 'Bài 14: Thiết kế đồ gia dụng từ vật liệu tái chế',
                         description: 'Tạo đồ gia dụng từ vật liệu tái chế'
                     }
                 ]
             },
             {
-                id: 'grade9-topic8',
-                name: 'Hướng nghiệp',
+                id: 'grade9-topicVIII',
+                name: 'Chủ đề 8: Hướng nghiệp',
                 description: 'Giới thiệu nghề nghiệp liên quan đến mỹ thuật',
                 lessonTypes: [
                     {
-                        id: 'grade9-topic8-lesson1',
-                        name: 'Ngành nghề mỹ thuật ứng dụng',
+                        id: 'grade9-topicVIII-lesson1',
+                        name: 'Bài 15: Ngành nghề liên quan đến mĩ thuật ứng dụng',
                         description: 'Tìm hiểu các ngành nghề thiết kế, mỹ thuật'
                     },
                     {
-                        id: 'grade9-topic8-lesson2',
-                        name: 'Đặc trưng nghề mỹ thuật',
-                        description: 'Khám phá yêu cầu và kỹ năng nghề mỹ thuật'
+                        id: 'grade9-topicVIII-lesson2',
+                        name: 'Bài 16: Đặc trưng ngành nghề mĩ thuật ứng dụng',
+                        description: 'Khám phá yêu cầu và kỹ năng nghề mỹ thuật ứng dụng'
                     }
                 ]
             }

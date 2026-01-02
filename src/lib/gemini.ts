@@ -1,12 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
     ExerciseType,
-    MultipleChoiceQuestion,
-    DragDropExercise,
-    MatchingExercise,
-    OrderingExercise,
-    ImageSelectionExercise,
-    ExerciseData
+    QuestionDifficulty,
+    ComprehensiveExerciseData
 } from '@/types';
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -17,124 +13,94 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey || 'placeholder-key');
 
-// Generate exercises using Gemini AI
+// Generate comprehensive exercises using Gemini AI
 export async function generateExercise(
     grade: number,
     topicName: string,
-    lessonName: string,
-    exerciseType: ExerciseType
-): Promise<ExerciseData> {
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    lessonName: string
+): Promise<ComprehensiveExerciseData> {
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    let prompt = '';
+    const prompt = `Bạn là một chuyên gia giáo dục Mỹ thuật THCS. Hãy tạo một bài kiểm tra tổng hợp gồm 15 câu hỏi cho học sinh lớp ${grade} với chủ đề "${topicName}" - bài "${lessonName}".
 
-    switch (exerciseType) {
-        case 'multiple-choice':
-            prompt = `Bạn là một giáo viên Mỹ thuật THCS chuyên nghiệp. Hãy tạo 5 câu hỏi trắc nghiệm về chủ đề "${topicName}" - bài "${lessonName}" cho học sinh lớp ${grade}.
+Yêu cầu bắt buộc:
+1. Nội dung chính xác 100% theo SGK "Kết nối tri thức với cuộc sống".
+2. Tổng số câu: 15 câu.
+3. Phân loại độ khó:
+   - 5 câu nhận biết
+   - 5 câu thông hiểu
+   - 5 câu vận dụng
+4. Phân loại hình thức câu hỏi (đảm bảo mỗi loại có 3 câu):
+   - 3 câu trắc nghiệm (multiple-choice)
+   - 3 câu kéo thả (drag-drop)
+   - 3 câu ghép đôi (matching)
+   - 3 câu sắp xếp (ordering)
+   - 3 câu chọn hình (image-selection) - vì không có hình thật, hãy mô tả chi tiết hình ảnh.
 
-Mỗi câu hỏi cần:
-- Câu hỏi rõ ràng, phù hợp với trình độ học sinh lớp ${grade}
-- 4 đáp án (A, B, C, D)
-- Chỉ 1 đáp án đúng
-- Nội dung liên quan đến kiến thức mỹ thuật, lịch sử nghệ thuật, kỹ thuật vẽ, hoặc cảm thứ nghệ thuật
-
-Trả về kết quả dưới dạng JSON với cấu trúc:
+Trả về kết quả dưới dạng JSON duy nhất với cấu trúc sau:
 {
   "questions": [
     {
-      "question": "Câu hỏi...",
-      "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
+      "id": "unique_id_1",
+      "type": "multiple-choice",
+      "difficulty": "nhận_biết",
+      "points": 10,
+      "question": "Nội dung câu hỏi...",
+      "options": ["A", "B", "C", "D"],
       "correctAnswer": 0
-    }
-  ]
-}
-
-Chỉ trả về JSON, không thêm text giải thích.`;
-            break;
-
-        case 'drag-drop':
-            prompt = `Bạn là một giáo viên Mỹ thuật THCS chuyên nghiệp. Hãy tạo bài tập kéo thả về chủ đề "${topicName}" - bài "${lessonName}" cho học sinh lớp ${grade}.
-
-Tạo bài tập với:
-- Hướng dẫn rõ ràng
-- 5-6 items cần kéo (ví dụ: tên họa sĩ, tên tác phẩm, kỹ thuật vẽ, màu sắc, v.v.)
-- 5-6 drop zones tương ứng (ví dụ: thể loại, thời kỳ, đặc điểm, v.v.)
-- Mapping chính xác giữa items và drop zones
-
-Trả về JSON:
-{
-  "instruction": "Hướng dẫn...",
-  "items": ["Item 1", "Item 2", ...],
-  "dropZones": ["Zone 1", "Zone 2", ...],
-  "correctMapping": {"0": 0, "1": 1, ...}
-}
-
-Chỉ trả về JSON, không thêm text giải thích.`;
-            break;
-
-        case 'matching':
-            prompt = `Bạn là một giáo viên Mỹ thuật THCS chuyên nghiệp. Hãy tạo bài tập ghép đôi về chủ đề "${topicName}" - bài "${lessonName}" cho học sinh lớp ${grade}.
-
-Tạo bài tập với:
-- Hướng dẫn rõ ràng
-- 5-6 items bên trái (ví dụ: tên tác phẩm, họa sĩ, khái niệm)
-- 5-6 items bên phải (ví dụ: mô tả, thời kỳ, đặc điểm)
-- Cặp ghép chính xác
-
-Trả về JSON:
-{
-  "instruction": "Hướng dẫn...",
-  "leftItems": ["Left 1", "Left 2", ...],
-  "rightItems": ["Right 1", "Right 2", ...],
-  "correctPairs": {"0": 0, "1": 1, ...}
-}
-
-Chỉ trả về JSON, không thêm text giải thích.`;
-            break;
-
-        case 'ordering':
-            prompt = `Bạn là một giáo viên Mỹ thuật THCS chuyên nghiệp. Hãy tạo bài tập sắp xếp thứ tự về chủ đề "${topicName}" - bài "${lessonName}" cho học sinh lớp ${grade}.
-
-Tạo bài tập với:
-- Hướng dẫn rõ ràng
-- 5-6 items cần sắp xếp (ví dụ: các bước vẽ tranh, thời kỳ lịch sử nghệ thuật, quy trình sáng tạo)
-- Thứ tự đúng của các items
-
-Trả về JSON:
-{
-  "instruction": "Hướng dẫn...",
-  "items": ["Item 1", "Item 2", ...],
-  "correctOrder": [2, 0, 3, 1, ...]
-}
-
-Trong đó correctOrder là thứ tự index đúng của items.
-Chỉ trả về JSON, không thêm text giải thích.`;
-            break;
-
-        case 'image-selection':
-            prompt = `Bạn là một giáo viên Mỹ thuật THCS chuyên nghiệp. Hãy tạo bài tập chọn hình theo ý chính về chủ đề "${topicName}" - bài "${lessonName}" cho học sinh lớp ${grade}.
-
-Tạo bài tập với:
-- Hướng dẫn rõ ràng
-- Ý chính cần tìm
-- 6 mô tả hình ảnh (vì không thể tạo hình thật, hãy mô tả chi tiết)
-- 2-3 hình đúng với ý chính
-
-Trả về JSON:
-{
-  "instruction": "Hướng dẫn...",
-  "mainIdea": "Ý chính cần tìm...",
-  "images": [
-    {"url": "placeholder", "description": "Mô tả chi tiết hình ảnh 1"},
-    {"url": "placeholder", "description": "Mô tả chi tiết hình ảnh 2"},
+    },
+    {
+      "id": "unique_id_2",
+      "type": "drag-drop",
+      "difficulty": "thông_hiểu",
+      "points": 10,
+      "instruction": "Hướng dẫn...",
+      "items": ["Item 1", "Item 2", ...],
+      "dropZones": ["Zone 1", "Zone 2", ...],
+      "correctMapping": {"0": 1, "1": 0, ...}
+    },
+    {
+      "id": "unique_id_3",
+      "type": "matching",
+      "difficulty": "vận_dụng",
+      "points": 10,
+      "instruction": "Hướng dẫn...",
+      "leftItems": ["Left 1", "Left 2", ...],
+      "rightItems": ["Right 1", "Right 2", ...],
+      "correctPairs": {"0": 1, ...}
+    },
+    {
+      "id": "unique_id_4",
+      "type": "ordering",
+      "difficulty": "nhận_biết",
+      "points": 10,
+      "instruction": "Hướng dẫn...",
+      "items": ["Item 1", "Item 2", ...],
+      "correctOrder": [1, 0, 2, ...] // index
+    },
+    {
+      "id": "unique_id_5",
+      "type": "image-selection",
+      "difficulty": "thông_hiểu",
+      "points": 10,
+      "instruction": "Hướng dẫn...",
+      "mainIdea": "Ý chính...",
+      "images": [
+        {"url": "placeholder", "description": "Mô tả 1"},
+        {"url": "placeholder", "description": "Mô tả 2"},
+        ...
+      ],
+      "correctIndices": [0, 2]
+    },
     ...
   ],
-  "correctIndices": [0, 2, ...]
+  "totalPoints": 150
 }
 
-Chỉ trả về JSON, không thêm text giải thích.`;
-            break;
-    }
+Lưu ý:
+- "correctAnswer" cho trắc nghiệm là index (0-3).
+- "correctMapping", "correctPairs", "correctOrder", "correctIndices" đều dùng index (bắt đầu từ 0).
+- KHÔNG thêm bất kỳ text nào ngoài JSON.`;
 
     try {
         const result = await model.generateContent(prompt);
@@ -149,130 +115,177 @@ Chỉ trả về JSON, không thêm text giải thích.`;
 
         const data = JSON.parse(jsonMatch[0]);
 
-        // Return formatted exercise data
-        switch (exerciseType) {
-            case 'multiple-choice':
-                return {
-                    type: 'multiple-choice',
-                    questions: data.questions as MultipleChoiceQuestion[]
-                };
-            case 'drag-drop':
-                return {
-                    type: 'drag-drop',
-                    exercise: data as DragDropExercise
-                };
-            case 'matching':
-                return {
-                    type: 'matching',
-                    exercise: data as MatchingExercise
-                };
-            case 'ordering':
-                return {
-                    type: 'ordering',
-                    exercise: data as OrderingExercise
-                };
-            case 'image-selection':
-                return {
-                    type: 'image-selection',
-                    exercise: data as ImageSelectionExercise
-                };
+        // Validate structure slightly (optional but good practice)
+        if (!data.questions || !Array.isArray(data.questions)) {
+            throw new Error('Invalid JSON structure: missing questions array');
         }
+
+        return data as ComprehensiveExerciseData;
+
     } catch (error) {
         console.error('Error generating exercise:', error);
-
-        // Return fallback exercise if AI fails
-        return generateFallbackExercise(exerciseType, topicName, lessonName);
+        return generateFallbackExercise(grade, topicName, lessonName);
     }
 }
 
-// Fallback exercises if AI generation fails
+// Fallback exercises separate by grade/topic is complex, so we provide a generic structure
 function generateFallbackExercise(
-    exerciseType: ExerciseType,
+    grade: number,
     topicName: string,
     lessonName: string
-): ExerciseData {
-    switch (exerciseType) {
-        case 'multiple-choice':
-            return {
+): ComprehensiveExerciseData {
+    return {
+        totalPoints: 150,
+        questions: [
+            // 3 Multiple choice
+            {
+                id: 'fb_mc_1',
                 type: 'multiple-choice',
-                questions: [
-                    {
-                        question: `Chủ đề "${topicName}" thuộc về lĩnh vực nào?`,
-                        options: ['Mỹ thuật', 'Âm nhạc', 'Văn học', 'Thể dục'],
-                        correctAnswer: 0
-                    },
-                    {
-                        question: `Bài "${lessonName}" giúp em học được kỹ năng gì?`,
-                        options: [
-                            'Kỹ năng quan sát và sáng tạo',
-                            'Kỹ năng tính toán',
-                            'Kỹ năng thể thao',
-                            'Kỹ năng nấu ăn'
-                        ],
-                        correctAnswer: 0
-                    }
-                ]
-            };
-
-        case 'drag-drop':
-            return {
+                difficulty: 'nhận_biết',
+                points: 10,
+                question: `Chủ đề "${topicName}" thuộc chương trình lớp mấy?`,
+                options: ['Lớp 6', `Lớp ${grade}`, 'Lớp 8', 'Lớp 9'],
+                correctAnswer: 1
+            },
+            {
+                id: 'fb_mc_2',
+                type: 'multiple-choice',
+                difficulty: 'nhận_biết',
+                points: 10,
+                question: 'Màu cơ bản gồm những màu nào?',
+                options: ['Đỏ, Vàng, Xanh lam', 'Cam, Tím, Xanh lá', 'Trắng, Đen, Xám', 'Nâu, Hồng, Be'],
+                correctAnswer: 0
+            },
+            {
+                id: 'fb_mc_3',
+                type: 'multiple-choice',
+                difficulty: 'thông_hiểu',
+                points: 10,
+                question: 'Mục đích chính của bài học này là gì?',
+                options: ['Giải trí', 'Học kỹ năng mới', 'Ngủ', 'Ăn uống'],
+                correctAnswer: 1
+            },
+            // 3 Drag Drop
+            {
+                id: 'fb_dd_1',
                 type: 'drag-drop',
-                exercise: {
-                    instruction: 'Kéo các yếu tố mỹ thuật vào đúng nhóm',
-                    items: ['Màu sắc', 'Đường nét', 'Hình khối', 'Ánh sáng', 'Bố cục'],
-                    dropZones: ['Yếu tố tạo hình', 'Yếu tố màu sắc', 'Yếu tố không gian', 'Yếu tố ánh sáng', 'Yếu tố cấu trúc'],
-                    correctMapping: { '0': 1, '1': 0, '2': 0, '3': 3, '4': 4 }
-                }
-            };
-
-        case 'matching':
-            return {
+                difficulty: 'vận_dụng',
+                points: 10,
+                instruction: 'Kéo các yếu tố vào đúng nhóm tương ứng.',
+                items: ['Màu nóng', 'Màu lạnh'],
+                dropZones: ['Đỏ, Cam, Vàng', 'Xanh lam, Tím, Xanh lá'],
+                correctMapping: { 0: 0, 1: 1 }
+            },
+            {
+                id: 'fb_dd_2',
+                type: 'drag-drop',
+                difficulty: 'thông_hiểu',
+                points: 10,
+                instruction: 'Phân loại công cụ vẽ.',
+                items: ['Cọ vẽ', 'Bút chì'],
+                dropZones: ['Dùng cho màu nước', 'Dùng để phác thảo'],
+                correctMapping: { 0: 0, 1: 1 }
+            },
+            {
+                id: 'fb_dd_3',
+                type: 'drag-drop',
+                difficulty: 'nhận_biết',
+                points: 10,
+                instruction: 'Ghép tên gọi.',
+                items: ['Họa sĩ', 'Nhà điêu khắc'],
+                dropZones: ['Vẽ tranh', 'Tạc tượng'],
+                correctMapping: { 0: 0, 1: 1 }
+            },
+            // 3 Matching
+            {
+                id: 'fb_m_1',
                 type: 'matching',
-                exercise: {
-                    instruction: 'Ghép các khái niệm với định nghĩa phù hợp',
-                    leftItems: ['Hội họa', 'Điêu khắc', 'Kiến trúc', 'Trang trí'],
-                    rightItems: [
-                        'Nghệ thuật tạo hình trên mặt phẳng',
-                        'Nghệ thuật tạo hình khối 3D',
-                        'Nghệ thuật xây dựng công trình',
-                        'Nghệ thuật làm đẹp đồ vật'
-                    ],
-                    correctPairs: { '0': 0, '1': 1, '2': 2, '3': 3 }
-                }
-            };
-
-        case 'ordering':
-            return {
+                difficulty: 'nhận_biết',
+                points: 10,
+                instruction: 'Ghép đôi tương ứng.',
+                leftItems: ['A', 'B'],
+                rightItems: ['A', 'B'],
+                correctPairs: { 0: 0, 1: 1 }
+            },
+            {
+                id: 'fb_m_2',
+                type: 'matching',
+                difficulty: 'thông_hiểu',
+                points: 10,
+                instruction: 'Ghép màu bổ túc.',
+                leftItems: ['Đỏ', 'Vàng'],
+                rightItems: ['Xanh lá', 'Tím'],
+                correctPairs: { 0: 0, 1: 1 }
+            },
+            {
+                id: 'fb_m_3',
+                type: 'matching',
+                difficulty: 'vận_dụng',
+                points: 10,
+                instruction: 'Ghép tác phẩm với tác giả.',
+                leftItems: ['Tô Ngọc Vân', 'Bùi Xuân Phái'],
+                rightItems: ['Thiếu nữ bên hoa huệ', 'Phố Phái'],
+                correctPairs: { 0: 0, 1: 1 }
+            },
+            // 3 Ordering
+            {
+                id: 'fb_o_1',
                 type: 'ordering',
-                exercise: {
-                    instruction: 'Sắp xếp các bước vẽ tranh theo đúng thứ tự',
-                    items: [
-                        'Tô màu và hoàn thiện',
-                        'Phác thảo ý tưởng',
-                        'Vẽ chi tiết',
-                        'Tạo bố cục',
-                        'Đánh giá và điều chỉnh'
-                    ],
-                    correctOrder: [1, 3, 2, 0, 4]
-                }
-            };
-
-        case 'image-selection':
-            return {
+                difficulty: 'nhận_biết',
+                points: 10,
+                instruction: 'Sắp xếp quy trình vẽ.',
+                items: ['Phác thảo', 'Tô màu', 'Hoàn thiện'],
+                correctOrder: [0, 1, 2]
+            },
+            {
+                id: 'fb_o_2',
+                type: 'ordering',
+                difficulty: 'thông_hiểu',
+                points: 10,
+                instruction: 'Sắp xếp độ đậm nhạt.',
+                items: ['Đen', 'Xám', 'Trắng'],
+                correctOrder: [0, 1, 2]
+            },
+            {
+                id: 'fb_o_3',
+                type: 'ordering',
+                difficulty: 'vận_dụng',
+                points: 10,
+                instruction: 'Sắp xếp thời gian.',
+                items: ['Sáng', 'Trưa', 'Chiều'],
+                correctOrder: [0, 1, 2]
+            },
+            // 3 Image Selection
+            {
+                id: 'fb_is_1',
                 type: 'image-selection',
-                exercise: {
-                    instruction: 'Chọn các hình ảnh thể hiện đúng ý chính',
-                    mainIdea: `Tác phẩm mỹ thuật về chủ đề ${topicName}`,
-                    images: [
-                        { url: 'placeholder', description: `Tranh vẽ về ${topicName}` },
-                        { url: 'placeholder', description: 'Tranh phong cảnh thiên nhiên' },
-                        { url: 'placeholder', description: `Tác phẩm điêu khắc về ${topicName}` },
-                        { url: 'placeholder', description: 'Ảnh chụp động vật' },
-                        { url: 'placeholder', description: `Thiết kế đồ họa về ${topicName}` },
-                        { url: 'placeholder', description: 'Hình ảnh kiến trúc hiện đại' }
-                    ],
-                    correctIndices: [0, 2, 4]
-                }
-            };
-    }
+                difficulty: 'nhận_biết',
+                points: 10,
+                instruction: 'Chọn hình hình tròn.',
+                mainIdea: 'Hình tròn',
+                images: [{ url: 'p', description: 'Hình tròn' }, { url: 'p', description: 'Hình vuông' }],
+                correctIndices: [0]
+            },
+            {
+                id: 'fb_is_2',
+                type: 'image-selection',
+                difficulty: 'thông_hiểu',
+                points: 10,
+                instruction: 'Chọn màu nóng.',
+                mainIdea: 'Màu nóng',
+                images: [{ url: 'p', description: 'Màu đỏ' }, { url: 'p', description: 'Màu xanh' }],
+                correctIndices: [0]
+            },
+            {
+                id: 'fb_is_3',
+                type: 'image-selection',
+                difficulty: 'vận_dụng',
+                points: 10,
+                instruction: 'Chọn bố cục cân đối.',
+                mainIdea: 'Cân đối',
+                images: [{ url: 'p', description: 'Cân đối' }, { url: 'p', description: 'Lệch' }],
+                correctIndices: [0]
+            }
+        ]
+    };
 }
