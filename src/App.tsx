@@ -6,6 +6,7 @@ import TeacherAuth from '@/pages/TeacherAuth';
 import StudentDashboard from '@/pages/StudentDashboard';
 import LessonSelection from '@/pages/LessonSelection';
 import Exercise from '@/pages/Exercise';
+import VisualSimulation from '@/pages/VisualSimulation';
 import TeacherDashboard from '@/pages/TeacherDashboard';
 
 // Protected route wrapper
@@ -36,7 +37,7 @@ function AppRoutes() {
             />
 
             <Route
-                path="/student/lesson/:topicId"
+                path="/student/lesson/:grade/:topicId"
                 element={
                     <ProtectedRoute requiredRole="student">
                         <LessonSelection />
@@ -45,10 +46,19 @@ function AppRoutes() {
             />
 
             <Route
-                path="/student/exercise/:lessonTypeId"
+                path="/student/exercise/:grade/:topicId/:lessonId"
                 element={
                     <ProtectedRoute requiredRole="student">
                         <Exercise />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/student/simulation/:grade/:topicId/:lessonId"
+                element={
+                    <ProtectedRoute requiredRole="student">
+                        <VisualSimulation />
                     </ProtectedRoute>
                 }
             />

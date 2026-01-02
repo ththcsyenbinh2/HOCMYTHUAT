@@ -14,23 +14,32 @@ export interface Teacher {
 }
 
 // ===== CURRICULUM TYPES =====
-export interface LessonType {
-    id: string;
-    name: string;
-    description: string;
+export interface Lesson {
+    id: number;
+    title: string;
 }
 
 export interface Topic {
     id: string;
-    name: string;
-    description: string;
-    lessonTypes: LessonType[];
+    title: string;
+    subject: string;
+    lessons: Lesson[];
 }
 
 export interface GradeCurriculum {
     grade: 6 | 7 | 8 | 9;
     topics: Topic[];
 }
+
+// Legacy types for backward compatibility
+export interface LessonType {
+    id: string;
+    name: string;
+    description: string;
+}
+
+// ===== COGNITIVE LEVEL TYPES =====
+export type CognitiveLevel = 'nhận_biết' | 'thông_hiểu' | 'vận_dụng';
 
 // ===== EXERCISE TYPES =====
 export type ExerciseType =
@@ -40,30 +49,106 @@ export type ExerciseType =
     | 'ordering'
     | 'image-selection';
 
-export interface MultipleChoiceQuestion {
-    question: string;
-    options: string[];
-    correctAnswer: number; // index of correct option
+export type LessonMode = 'questions' | 'simulation';
+
+// Base question interface with cognitive level
+export interface BaseQuestion {
+    id: string;
+    cognitiveLevel: CognitiveLevel;
 }
 
+export interface MultipleChoiceQuestion extends BaseQuestion {
+    type: 'multiple-choice';
+    question: string;
+    options: string[];
+    correctAnswer: number;
+}
+
+export interface DragDropQuestion extends BaseQuestion {
+    type: 'drag-drop';
+    instruction: string;
+    items: string[];
+    dropZones: string[];
+    correctMapping: Record<number, number>;
+}
+
+export interface MatchingQuestion extends BaseQuestion {
+    type: 'matching';
+    instruction: string;
+    leftItems: string[];
+    rightItems: string[];
+    correctPairs: Record<number, number>;
+}
+
+export interface OrderingQuestion extends BaseQuestion {
+    type: 'ordering';
+    instruction: string;
+    items: string[];
+    correctOrder: number[];
+}
+
+export interface ImageSelectionQuestion extends BaseQuestion {
+    type: 'image-selection';
+    instruction: string;
+    mainIdea: string;
+    images: {
+        url: string;
+        description: string;
+    }[];
+    correctIndices: number[];
+}
+
+export type Question =
+    | MultipleChoiceQuestion
+    | DragDropQuestion
+    | MatchingQuestion
+    | OrderingQuestion
+    | ImageSelectionQuestion;
+
+// Mixed exam structure
+export interface MixedExam {
+    lessonId: number;
+    lessonTitle: string;
+    topicTitle: string;
+    grade: number;
+    questions: Question[];
+    totalScore: number;
+    distribution: {
+        nhận_biết: number;
+        thông_hiểu: number;
+        vận_dụng: number;
+    };
+}
+
+export interface ExamResult {
+    examId: string;
+    studentId: string;
+    answers: Record<string, any>;
+    score: number;
+    totalScore: number;
+    percentage: number;
+    completedAt: string;
+}
+
+// Legacy types for backward compatibility
 export interface DragDropExercise {
     instruction: string;
     items: string[];
     dropZones: string[];
-    correctMapping: Record<number, number>; // item index -> drop zone index
+    correctMapping: Record<number, number>;
 }
 
 export interface MatchingExercise {
     instruction: string;
     leftItems: string[];
     rightItems: string[];
-    correctPairs: Record<number, number>; // left index -> right index
+    correctPairs: Record<number, number>;
 }
 
 export interface OrderingExercise {
     instruction: string;
     items: string[];
-    correctOrder: number[]; // correct indices order
+    correctOrder: number[];
 }
 
 export interface ImageSelectionExercise {
@@ -73,7 +158,7 @@ export interface ImageSelectionExercise {
         url: string;
         description: string;
     }[];
-    correctIndices: number[]; // indices of correct images
+    correctIndices: number[];
 }
 
 export type ExerciseData =

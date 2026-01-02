@@ -52,16 +52,15 @@ export default function StudentDashboard() {
                         <Card
                             key={topic.id}
                             hoverable
-                            onClick={() => navigate(`/student/lesson/${topic.id}`)}
+                            onClick={() => navigate(`/student/lesson/${selectedGrade}/${topic.id}`)}
                             className="topic-card"
                             style={{ animationDelay: `${index * 0.05}s` }}
                         >
-                            <div className="topic-number">{index + 1}</div>
-                            <h3>{topic.name}</h3>
-                            <p>{topic.description}</p>
+                            <div className="topic-number">{topic.id}</div>
+                            <h3>{topic.title}</h3>
                             <div className="topic-lessons">
                                 <span className="lesson-count">
-                                    {topic.lessonTypes.length} bài học
+                                    {topic.lessons.length} bài học
                                 </span>
                             </div>
                         </Card>
