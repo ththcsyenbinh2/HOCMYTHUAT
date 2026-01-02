@@ -38,50 +38,35 @@ export type ExerciseType =
     | 'drag-drop'
     | 'matching'
     | 'ordering'
-    | 'image-selection'
-    | 'comprehensive';
+    | 'image-selection';
 
-export type QuestionDifficulty = 'nhận_biết' | 'thông_hiểu' | 'vận_dụng';
-
-export interface BaseQuestion {
-    id: string; // unique id for key
-    type: ExerciseType;
-    difficulty: QuestionDifficulty;
-    points: number;
-}
-
-export interface MultipleChoiceQuestion extends BaseQuestion {
-    type: 'multiple-choice';
+export interface MultipleChoiceQuestion {
     question: string;
     options: string[];
     correctAnswer: number; // index of correct option
 }
 
-export interface DragDropQuestion extends BaseQuestion {
-    type: 'drag-drop';
+export interface DragDropExercise {
     instruction: string;
     items: string[];
     dropZones: string[];
     correctMapping: Record<number, number>; // item index -> drop zone index
 }
 
-export interface MatchingQuestion extends BaseQuestion {
-    type: 'matching';
+export interface MatchingExercise {
     instruction: string;
     leftItems: string[];
     rightItems: string[];
     correctPairs: Record<number, number>; // left index -> right index
 }
 
-export interface OrderingQuestion extends BaseQuestion {
-    type: 'ordering';
+export interface OrderingExercise {
     instruction: string;
     items: string[];
     correctOrder: number[]; // correct indices order
 }
 
-export interface ImageSelectionQuestion extends BaseQuestion {
-    type: 'image-selection';
+export interface ImageSelectionExercise {
     instruction: string;
     mainIdea: string;
     images: {
@@ -91,17 +76,12 @@ export interface ImageSelectionQuestion extends BaseQuestion {
     correctIndices: number[]; // indices of correct images
 }
 
-export type QuestionData =
-    | MultipleChoiceQuestion
-    | DragDropQuestion
-    | MatchingQuestion
-    | OrderingQuestion
-    | ImageSelectionQuestion;
-
-export interface ComprehensiveExerciseData {
-    questions: QuestionData[];
-    totalPoints: number;
-}
+export type ExerciseData =
+    | { type: 'multiple-choice'; questions: MultipleChoiceQuestion[] }
+    | { type: 'drag-drop'; exercise: DragDropExercise }
+    | { type: 'matching'; exercise: MatchingExercise }
+    | { type: 'ordering'; exercise: OrderingExercise }
+    | { type: 'image-selection'; exercise: ImageSelectionExercise };
 
 // ===== RESULT TYPES =====
 export interface ExerciseResult {
