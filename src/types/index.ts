@@ -124,8 +124,10 @@ export interface ExamResult {
     studentId: string;
     answers: Record<string, any>;
     score: number;
+    totalQuestions: number;
     totalScore: number;
     percentage: number;
+    byLevel?: Record<string, { correct: number; total: number }>;
     completedAt: string;
 }
 
